@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cube3Edit", "Cube3Edit\Cube3Edit.csproj", "{583B0467-62DE-4258-89E8-AA20C0F9CE85}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitForByteSupport", "BitForByteSupport\BitForByteSupport.csproj", "{D7A7938F-4BC0-4A0A-A61D-89C14A2F13AA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileHelper", "FileHelper\FileHelper.csproj", "{238F7F2C-5F3D-4A5B-9010-1D18E9DBE0A3}"
