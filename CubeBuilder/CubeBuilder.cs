@@ -2,34 +2,27 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CubeBuilder
 {
-    class CubeBuilder
+    internal static class CubeBuilder
     {
         private static string cubeFolder = null;
         private static string cubeFilename = null;
         private static string[] cubeFiles;
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-
             if (args.Length > 0)
             {
                 cubeFolder = args[0];
             }
-
-
-            if (cubeFolder == null || 
-                cubeFolder.ToLower().Equals("-help") ||
-                cubeFolder.ToLower().Equals("/help") ||
-                cubeFolder.ToLower().Equals("-?") ||
-                cubeFolder.ToLower().Equals("/?"))
+            if (cubeFolder == null ||
+                cubeFolder.Equals("-help", StringComparison.OrdinalIgnoreCase) ||
+                cubeFolder.Equals("-?", StringComparison.OrdinalIgnoreCase))
             {
-                displayHelp();
+                DisplayHelp();
                 Environment.Exit(0);
             }
 
@@ -69,7 +62,7 @@ namespace CubeBuilder
 
                 if (baseFolderLen > 0)
                 {
-                    if (file.ToLower().StartsWith(folder.ToLower()))
+                    if (file.StartsWith(folder, StringComparison.OrdinalIgnoreCase))
                     {
                         newFile = file.Substring(baseFolderLen + 1, file.Length - baseFolderLen - 1);
                     }
@@ -85,8 +78,8 @@ namespace CubeBuilder
             for (int i = 0; i < cubeFiles.Length; i++)
             {
                 System.Console.WriteLine(Path.GetExtension(cubeFiles[i]));
-                if (Path.GetExtension(cubeFiles[i]).ToUpper().Equals(".CUBE3") || 
-                    Path.GetExtension(cubeFiles[i]).ToUpper().Equals(".CUBEPRO"))
+                if (Path.GetExtension(cubeFiles[i]).Equals(".CUBE3", StringComparison.OrdinalIgnoreCase) ||
+                    Path.GetExtension(cubeFiles[i]).Equals(".CUBEPRO", StringComparison.OrdinalIgnoreCase))
                 {
                     return Path.GetFileName(cubeFiles[i]);
                 }
@@ -95,7 +88,7 @@ namespace CubeBuilder
             return null;
         }
 
-        private static void displayHelp()
+        private static void DisplayHelp()
         {
             System.Console.WriteLine("usage: cbld <folder>");
             System.Console.WriteLine("");
@@ -107,7 +100,6 @@ namespace CubeBuilder
 
         private static void BuildCubeFile()
         {
-
             CubeExtractor cbld = new CubeExtractor
             {
                 ModelFileCount = cubeFiles.Length,
@@ -117,46 +109,37 @@ namespace CubeBuilder
                 ModelFilenameSize = 0x104,
                 MaxFilenameLengthPlusSize = 0x108
             };
-
-
             for (int i=0; i < cubeFiles.Length; i++)
             {
                 cbld.ModelFileSize += cbld.MaxFilenameLengthPlusSize;
                 cbld.ModelFileNames.Add(cubeFiles[i]);
 
-                using (var inFile = File.OpenRead(cubeFolder + "\\" + cubeFiles[i]))
-                using (var binaryReader = new BinaryReader(inFile))
-                {
-                    var inputData = binaryReader.ReadBytes((int)binaryReader.BaseStream.Length);
-                    cbld.ModelFiles.Add(cubeFiles[i], inputData);
-                    cbld.ModelFileSize += inputData.Length;
-                    inFile.Close();
-                }
+                using var inFile = File.OpenRead(cubeFolder + "\\" + cubeFiles[i]);
+                using var binaryReader = new BinaryReader(inFile);
+                var inputData = binaryReader.ReadBytes((int)binaryReader.BaseStream.Length);
+                cbld.ModelFiles.Add(cubeFiles[i], inputData);
+                cbld.ModelFileSize += inputData.Length;
+                inFile.Close();
             }
 
             FileBackup.MakeBackup(cubeFilename, 5);
 
-            using (var outFile = File.OpenWrite(cubeFilename))
-            using (var binaryWriter = new BinaryWriter(outFile))
+            using var outFile = File.OpenWrite(cubeFilename);
+            using var binaryWriter = new BinaryWriter(outFile);
+            binaryWriter.Write(cbld.ModelFileCount);
+            binaryWriter.Write(cbld.ModelFileSize);
+            binaryWriter.Write(cbld.MaxFilenameLengthPlusSize);
+            foreach (String fname in cbld.ModelFileNames)
             {
-                binaryWriter.Write(cbld.ModelFileCount);
-                binaryWriter.Write(cbld.ModelFileSize);
-                binaryWriter.Write(cbld.MaxFilenameLengthPlusSize);
-                foreach(String fname in cbld.ModelFileNames)
-                {
-                    Byte[] fnameData = new byte[cbld.ModelFilenameSize];
-                    Byte[] fnameBytes = Encoding.ASCII.GetBytes(fname);
-                    int fnameLength = cbld.ModelFilenameSize <= fnameBytes.Length ? cbld.ModelFilenameSize : fnameBytes.Length;
-                    Array.Copy(fnameBytes, fnameData, fnameLength);
-                    binaryWriter.Write(cbld.ModelFiles[fname].Length);
-                    binaryWriter.Write(fnameData, 0, cbld.ModelFilenameSize);
-                    binaryWriter.Write(cbld.ModelFiles[fname]);
-                }
-                outFile.Close();
+                Byte[] fnameData = new byte[cbld.ModelFilenameSize];
+                Byte[] fnameBytes = Encoding.ASCII.GetBytes(fname);
+                int fnameLength = cbld.ModelFilenameSize <= fnameBytes.Length ? cbld.ModelFilenameSize : fnameBytes.Length;
+                Array.Copy(fnameBytes, fnameData, fnameLength);
+                binaryWriter.Write(cbld.ModelFiles[fname].Length);
+                binaryWriter.Write(fnameData, 0, cbld.ModelFilenameSize);
+                binaryWriter.Write(cbld.ModelFiles[fname]);
             }
-
-
+            outFile.Close();
         }
     }
-
 }
