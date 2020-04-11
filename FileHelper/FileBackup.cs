@@ -116,7 +116,6 @@ namespace FileHelper
         }
     }
 
-
     // String Extension that was used in the code but left out when I first published
     public static class StringExtension
     {

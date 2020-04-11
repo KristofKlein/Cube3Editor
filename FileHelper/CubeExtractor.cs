@@ -7,20 +7,12 @@ namespace FileHelper
 {
     public class CubeExtractor
     {
-        private int modelFileCount;
-        private int modelFileSize;
-        private List<String> modelFileNames = new List<string>();
-        private Dictionary<String, Byte[]> modelFiles = new Dictionary<string, byte[]>();
-
-        private int modelFilenameSize;
-        private Int16 maxFilenameLengthPlusSize;
-
-        public int ModelFileCount { get => modelFileCount; set => modelFileCount = value; }
-        public List<string> ModelFileNames { get => modelFileNames; set => modelFileNames = value; }
-        public Dictionary<string, byte[]> ModelFiles { get => modelFiles; set => modelFiles = value; }
-        public int ModelFileSize { get => modelFileSize; set => modelFileSize = value; }
-        public int ModelFilenameSize { get => modelFilenameSize; set => modelFilenameSize = value; }
-        public Int16 MaxFilenameLengthPlusSize { get => maxFilenameLengthPlusSize; set => maxFilenameLengthPlusSize = value; }
+        public int ModelFileCount { get; set; }
+        public List<string> ModelFileNames { get; set; } = new List<string>();
+        public Dictionary<string, byte[]> ModelFiles { get; set; } = new Dictionary<string, byte[]>();
+        public int ModelFileSize { get; set; }
+        public int ModelFilenameSize { get; set; }
+        public Int16 MaxFilenameLengthPlusSize { get; set; }
 
         public CubeExtractor()
         {
@@ -61,7 +53,6 @@ namespace FileHelper
                 string fileName = Encoding.ASCII.GetString(fileNameArray, 0, fileNameArray.Length);
                 ModelFileNames.Add(fileName);
                 ModelFiles.Add(fileName, fileData);
-
             }
         }
 
@@ -72,7 +63,7 @@ namespace FileHelper
             {
                 String extension = Path.GetExtension(filename);
 
-                if (extension.ToUpper().Equals(".CUBE3") || extension.ToUpper().Equals(".CUBEPRO"))
+                if (extension.Equals(".CUBE3", StringComparison.OrdinalIgnoreCase) || extension.Equals(".CUBEPRO", StringComparison.OrdinalIgnoreCase))
                 {
                     cubeFilename = filename;
                     break;
@@ -87,7 +78,7 @@ namespace FileHelper
             {
                 String extension = Path.GetExtension(filename);
 
-                if (extension.ToUpper().Equals(".XML"))
+                if (extension.Equals(".XML", StringComparison.OrdinalIgnoreCase))
                 {
                     xmlFilename = filename;
                     break;

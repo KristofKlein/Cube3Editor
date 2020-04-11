@@ -11,12 +11,13 @@ namespace FileHelper
     {
         uint[] table;
 
+        [CLSCompliant(false)]
         public uint ComputeChecksum(byte[] bytes)
         {
             uint crc = 0xffffffff;
             for (int i = 0; i < bytes.Length; ++i)
             {
-                byte index = (byte)(((crc) & 0xff) ^ bytes[i]);
+                byte index = (byte)((crc & 0xff) ^ bytes[i]);
                 crc = (uint)((crc >> 8) ^ table[index]);
             }
             return ~crc;
@@ -29,9 +30,9 @@ namespace FileHelper
 
         public CRC32()
         {
-            uint poly = 0xedb88320;
+            const uint poly = 0xedb88320;
             table = new uint[256];
-            uint temp = 0;
+            uint temp;
             for (uint i = 0; i < table.Length; ++i)
             {
                 temp = i;
