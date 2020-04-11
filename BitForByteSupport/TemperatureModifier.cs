@@ -6,5 +6,4 @@
         public int oldValue;
         public int newValue;
     }
-
 }

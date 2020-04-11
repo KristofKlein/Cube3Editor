@@ -345,7 +345,6 @@ namespace BitForByteSupport
             }
         }
 
-
         static public string GetMaterialColor(int material)
         {
             switch (material)
@@ -513,7 +512,7 @@ namespace BitForByteSupport
             }
         }
 
-        static public int getCUBE3Code(string type, string color)
+        static public int GetCUBE3Code(string type, string color)
         {
             int cube3Code = -1;
             if (type.Equals(PLA))
@@ -666,7 +665,7 @@ namespace BitForByteSupport
                     cube3Code = CP_ABS_WHITE;
                 else if (color.Equals(YELLOW))
                     cube3Code = CP_ABS_YELLOW;
-            }   
+            }
             else if (type.Equals(CP_PLA))
             {
                 if (color.Equals(BLACK))
@@ -737,7 +736,6 @@ namespace BitForByteSupport
             {
                 cube3Code = CUBE3_INFINITY_RINSE;
             }
-
             else if (type.Equals(CP_INFRINSE))
             {
                 cube3Code = CUBEPRO_INFINITY_RINSE;

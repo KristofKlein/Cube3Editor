@@ -1,16 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>BitForByteSupport.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Reference Include="mscorlib">
-      <HintPath>C:\Windows\Microsoft.NET\Framework\v2.0.50727\mscorlib.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>
+

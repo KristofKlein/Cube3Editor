@@ -6,7 +6,6 @@ namespace BitForByteSupport
 {
     public class CubeScript
     {
-        private List<String> bfbStringList;
         private BitFromByte bfbObject;
         private string firmwareStr;
         private string minFirmwareStr;
@@ -89,7 +88,6 @@ namespace BitForByteSupport
             PrintSetLine("E2", MaterialE2Str);
             PrintSetLine("E3", MaterialE3Str);
 
-
             foreach (int temp in UniqueLeftTemps)
             {
                 if (temp >= 0)
@@ -128,8 +126,6 @@ namespace BitForByteSupport
             {
                 PrintModifyPressureLine("EXTPRESSURE", pressure);
             }
-
-
         }
         private void PrintSetLine(string command, string value)
         {
@@ -207,7 +203,7 @@ namespace BitForByteSupport
                 {
                     DoSet(lineArray, count);
                 }
-                else if (lineArray[0].ToUpper().Equals("MODIFY"))
+                else if (lineArray[0].Equals("MODIFY", StringComparison.OrdinalIgnoreCase))
                 {
                     DoModify(lineArray, count);
                 }
@@ -220,9 +216,7 @@ namespace BitForByteSupport
                 {
                     throw new Exception("Invalid script file at line " + count);
                 }
-
             }
-
         }
 
         // SET <Field> <value>
@@ -260,7 +254,6 @@ namespace BitForByteSupport
             {
                 throw new Exception("Invalid SET command at line " + lineNumber);
             }
-
         }
 
         // modify temperature [<modifier>] xxxx by <mod type> <mod value>
@@ -293,7 +286,6 @@ namespace BitForByteSupport
             {
                 throw new Exception("Invalid MODIFY command at line " + lineNumber);
             }
-
         }
 
         private void DoModifyTemperature(string[] lineArray, int lineNumber)
@@ -319,8 +311,6 @@ namespace BitForByteSupport
                 modTypeIndex = 5;
                 modValueIndex = 6;
             }
-
-
             if (sideIndex > 0)
             {
                 bool valid = Enum.TryParse(lineArray[sideIndex], out tempType);
@@ -334,8 +324,6 @@ namespace BitForByteSupport
             String byStr = lineArray[byIndex].ToUpper();
             String modType = lineArray[modTypeIndex].ToUpper();
             String modValueStr = lineArray[modValueIndex];
-            int modValue;
-
             TemperatureModifier tempMod = new TemperatureModifier();
 
             // process OldTemperature
@@ -344,7 +332,7 @@ namespace BitForByteSupport
                 throw new Exception("Nonnumeric MODIFY TEMPERATURE old value at line " + lineNumber);
             }
 
-            if (!int.TryParse(modValueStr, out modValue))
+            if (!int.TryParse(modValueStr, out int modValue))
             {
                 throw new Exception("Invalid MODIFY TEMPERATURE modification value at line " + lineNumber);
             }
@@ -359,7 +347,7 @@ namespace BitForByteSupport
             if (modType.Equals("PERCENTAGE"))
             {
                 double percentage = modValue;
-                tempMod.newValue = Convert.ToInt32(tempMod.oldValue + (percentage / 100) * tempMod.oldValue);
+                tempMod.newValue = Convert.ToInt32(tempMod.oldValue + ((percentage / 100) * tempMod.oldValue));
             }
             else if (modType.Equals("ADD"))
             {
@@ -380,7 +368,6 @@ namespace BitForByteSupport
 
             switch (tempType)
             {
-
                 case TemperatureEnum.ALL:
                     leftMod = new TemperatureModifier();
                     rightMod = new TemperatureModifier();
@@ -439,8 +426,10 @@ namespace BitForByteSupport
                 throw new Exception("Invalid MODIFY RETRACTSTART at line " + lineNumber);
             }
 
-            if (!lineArray[byIndex].ToUpper().Equals("REPLACE"))
+            if (!lineArray[byIndex].Equals("REPLACE", StringComparison.OrdinalIgnoreCase))
+            {
                 ValidateRetractLine(lineArray, oldRetractIndex, byIndex, modTypeIndex, modValueIndex);
+            }
             else
             {
                 DoModifyRetractStartReplace(lineArray, lineNumber);
@@ -477,7 +466,6 @@ namespace BitForByteSupport
             retractMod.retractCmd = BFBConstants.RETRACT_START;
 
             RetractStartModifers.Add(retractMod);
-
         }
 
         private void DoModifyRetractStartReplace(string[] lineArray, int lineNumber)
@@ -496,11 +484,6 @@ namespace BitForByteSupport
             String gValueStr = lineArray[gIndex].ToUpper();
             String fValueStr = lineArray[fIndex].ToUpper();
 
-            int pValue;
-            int sValue;
-            int gValue;
-            int fValue;
-
             // process OldTemperature
             if (!int.TryParse(oldRetract, out int oldValue))
             {
@@ -514,18 +497,15 @@ namespace BitForByteSupport
             }
 
             // P-Value
-            if (!int.TryParse(pValueStr, out pValue) ||
-                !int.TryParse(sValueStr, out sValue) ||
-                !int.TryParse(gValueStr, out gValue) ||
-                !int.TryParse(fValueStr, out fValue))
+            if (!int.TryParse(pValueStr, out int pValue) ||
+                !int.TryParse(sValueStr, out int sValue) ||
+                !int.TryParse(gValueStr, out int gValue) ||
+                !int.TryParse(fValueStr, out int fValue))
             {
                 throw new Exception($"Invalid MODIFY RETRACT modification value at line {lineNumber}");
             }
 
-
-
             RetractModifier retractMod = new RetractModifier();
-
             // process OldTemperature
             retractMod.oldRetractValue = oldValue;
 
@@ -546,7 +526,6 @@ namespace BitForByteSupport
             int byIndex = 3;
             int modTypeIndex = 4;
             int modValueIndex = 5;
-
             // check parameter count
             if (lineArray.Length != 6)
             {
@@ -598,7 +577,6 @@ namespace BitForByteSupport
                 throw new Exception("Invalid MODIFY EXTPRESSURE at line " + lineNumber);
             }
 
-
             String oldTPressure = lineArray[oldPressureIndex];
             String byStr = lineArray[byIndex].ToUpper();
             String modType = lineArray[modTypeIndex].ToUpper();
@@ -611,7 +589,6 @@ namespace BitForByteSupport
             if (!Double.TryParse(oldTPressure, out pressureMod.oldPressureValue))
             {
                 throw new Exception("Nonnumeric MODIFY EXTPRESSURE old value at line " + lineNumber);
-
             }
 
             if (!Double.TryParse(modValueStr, out modValue))
@@ -644,12 +621,9 @@ namespace BitForByteSupport
                 throw new Exception("Invalid MODIFY EXTPRESSURE modificaiton setting at line " + lineNumber);
             }
 
-
             pressureMod.pressureCmd = BFBConstants.EXTRUDER_PRESSURE;
             PressureModifiers.Add(pressureMod);
         }
-
-
         private void ValidateRetractLine(string[] lineArray, int oldRetractIndex, int byIndex, int modTypeIndex, int modValueIndex)
         {
             String oldRetract = lineArray[oldRetractIndex];
@@ -657,7 +631,6 @@ namespace BitForByteSupport
             String modType = lineArray[modTypeIndex].ToUpper();
             String modValueStr = lineArray[modValueIndex];
             int modValue;
-
             // process OldTemperature
             if (!int.TryParse(oldRetract, out int oldValue))
             {
@@ -683,7 +656,6 @@ namespace BitForByteSupport
                 }
             }
         }
-
 
         public BitFromByte BfbObject { get => bfbObject; set => bfbObject = value; }
         public string FirmwareStr { get => firmwareStr; set => firmwareStr = value; }

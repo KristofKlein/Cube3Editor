@@ -9,5 +9,4 @@
         public int newGValue;
         public int newFValue;
     }
-
 }

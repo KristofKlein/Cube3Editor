@@ -100,7 +100,6 @@ namespace BitForByteSupport
             return bytes;
         }
 
-
         public string GetText(string control)
         {
             int index = BfbLines.FindIndex(x => x.Contains(control));
@@ -126,7 +125,6 @@ namespace BitForByteSupport
             else
             {
                 return BFBConstants.EMPTY;
-
             }
         }
 
@@ -145,8 +143,6 @@ namespace BitForByteSupport
                 return BFBConstants.EMPTY;
             }
         }
-
-
         public void SetFIRMWARE(string firmwareVersion)
         {
             int index = BfbLines.FindIndex(x => x.Contains(BFBConstants.FIRMWARE));
@@ -200,7 +196,7 @@ namespace BitForByteSupport
 
         public void SetMATERIALCODE(string materialCode, string type, string color)
         {
-            int cubeCode = BFBConstants.getCUBE3Code(type, color);
+            int cubeCode = BFBConstants.GetCUBE3Code(type, color);
 
             SetMATERIALCODE(materialCode, cubeCode);
         }
@@ -309,8 +305,6 @@ namespace BitForByteSupport
             PressureLineList.Clear();
 
             getExtruderPressures(BFBConstants.EXTRUDER_PRESSURE);
-
-
         }
         public List<string> getExtruderPressures(string bfbPressureCode)
         {
@@ -343,7 +337,6 @@ namespace BitForByteSupport
         {
 
             List<int> keys;
-
             keys = PressureDictionary.Keys.ToList();
 
             List<Double> uniquePressures = new List<Double>();
@@ -381,8 +374,6 @@ namespace BitForByteSupport
                 }
             }
         }
-
-
         public List<string> generateRetractionStartList()
         {
             List<string> retractions = new List<string>();
@@ -391,7 +382,6 @@ namespace BitForByteSupport
             {
                 if (BfbLines[i].StartsWith(BFBConstants.RETRACT_START))
                 {
-
                     retractions.Add(BfbLines[i]);
                     Retraction retraction = new Retraction(BfbLines[i], i);
                     RetractionStartDictionary.Add(i, retraction);
@@ -404,7 +394,6 @@ namespace BitForByteSupport
                 }
             }
             return retractions;
-
         }
 
         public List<int> GetUniqueRetractions(string retractCmd)
@@ -433,7 +422,6 @@ namespace BitForByteSupport
                 addRetract = false;
                 if (BfbLines[i].StartsWith(retractCmd))
                 {
-
                     // retraction start
                     if (!retractStop)
                     {
@@ -479,7 +467,6 @@ namespace BitForByteSupport
             {
                 if (BfbLines[i].StartsWith(BFBConstants.RETRACT_STOP))
                 {
-
                     retractionss.Add(BfbLines[i]);
                     Retraction retraction = new Retraction(BfbLines[i], i);
                     RetractionStopDictionary.Add(i, retraction);
@@ -492,7 +479,6 @@ namespace BitForByteSupport
                 }
             }
             return retractionss;
-
         }
 
         public List<string> getTemperatures(string bfbTemperatureCode)
@@ -550,7 +536,6 @@ namespace BitForByteSupport
             {
                 List<int> pressureLines = PressureLineList[bfbStringList[index]];
                 PressureLineList.Remove(bfbStringList[index]);
-
                 List<int> newRetractLines = new List<int>();
 
                 foreach (int line in pressureLines)
@@ -572,7 +557,6 @@ namespace BitForByteSupport
                     }
                 }
             }
-
         }
 
         public void updateRetractionStartLines(int index, string retractCmd)
@@ -581,8 +565,6 @@ namespace BitForByteSupport
             RetractionStartLineList.Remove(bfbStringList[index]);
 
             Dictionary<int, string> updatedBFBLines = new Dictionary<int, string>();
-
-
             foreach (int line in retractLines)
             {
                 bfbStringList[line] = retractCmd;
@@ -603,15 +585,11 @@ namespace BitForByteSupport
             }
         }
 
-        public void updateRetractionStopLines(int index, string retractCmd)
+        public void UpdateRetractionStopLines(int index, string retractCmd)
         {
             List<int> retractLines = RetractionStopLineList[bfbStringList[index]];
-
             List<int> newRetractLines = new List<int>();
-
             RetractionStopLineList.Remove(bfbStringList[index]);
-
-
             foreach (int line in retractLines)
             {
                 bfbStringList[line] = retractCmd;
@@ -667,7 +645,6 @@ namespace BitForByteSupport
                     oldTempLineList.Remove(index);
                     updatedBFBLines.Add(index, UpdateTemperaturesInBFB(index, newTemp));
                 }
-
             }
 
             // remove old and new temps, if present.
@@ -693,10 +670,7 @@ namespace BitForByteSupport
             {
                 bfbStringList[index] = updatedBFBLines[index];
             }
-
-
         }
-
         public string UpdateTemperaturesInBFB(int index, int temperature)
         {
             string[] tempStrArray = BfbLines[index].Split(' ');
@@ -705,7 +679,5 @@ namespace BitForByteSupport
 
             return string.Join(" ", tempStrArray);
         }
-
     }
-
 }

@@ -4,11 +4,6 @@ namespace BitForByteSupport
 {
     public  class Retraction
     {
-        private int p;
-        private int s;
-        private int g;
-        private int f;
-        private int index;
 
         public Retraction(string v, int index)
         {
@@ -52,30 +47,10 @@ namespace BitForByteSupport
             }
         }
 
-        public int P
-        {
-            get => p;
-            set => p = value;
-        }
-        public int S
-        {
-            get => s;
-            set => s = value;
-        }
-        public int G
-        {
-            get => g;
-            set => g = value;
-        }
-        public int F
-        {
-            get => f;
-            set => f = value;
-        }
-        public int Index
-        {
-            get => index;
-            set => index = value;
-        }
+        public int P { get; set; }
+        public int S { get; set; }
+        public int G { get; set; }
+        public int F { get; set; }
+        public int Index { get; set; }
     }
 }

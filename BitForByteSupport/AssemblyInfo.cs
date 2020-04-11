@@ -6,7 +6,6 @@ See License.txt.
 
 using System;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 //[assembly: AssemblyCompany("John Burnham, https://github.com/buddybu/Cube3Editor")]
 [assembly: AssemblyCopyright("John Burnham")]

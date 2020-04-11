@@ -1,6 +1,6 @@
 ﻿namespace BitForByteSupport
 {
-    internal class TemperatureType
+    internal static class TemperatureType
     {
         public enum TemperatureEnum
         {
